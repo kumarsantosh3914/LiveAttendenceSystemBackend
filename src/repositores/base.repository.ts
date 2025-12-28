@@ -14,15 +14,15 @@ abstract class BaseRepository<T extends Document> {
     }
 
     async findById(id: string | Types.ObjectId): Promise<T | null> {
-        if (Types.ObjectId.isValid(id)) {
-            throw new BadRequestError("Record not found");
+        if (!Types.ObjectId.isValid(id)) {
+            throw new BadRequestError("Invalid ID format");
         }
 
         return await this.model.findById(id);
     }
 
     async update(id: string | Types.ObjectId, updateData: UpdateQuery<T>): Promise<T | null> {
-        if (Types.ObjectId.isValid(id)) {
+        if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestError("Invalid ID format");
         }
 
@@ -30,7 +30,7 @@ abstract class BaseRepository<T extends Document> {
     }
 
     async delete(id: string): Promise<T | null> {
-        if (Types.ObjectId.isValid(id)) {
+        if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestError("Invalid ID format");
         }
 
