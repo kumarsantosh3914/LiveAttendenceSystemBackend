@@ -1,5 +1,5 @@
 import { UserRepository } from "../repositores/user.repository";
-import { SignUpRequestDto, SignUpResponseDto, transformUserToResponse } from "../dto/user.dto";
+import { SignUpRequestDto, SignUpResponseDto, SignInRequestDto, SignInResponseDto, transformUserToResponse } from "../dto/user.dto";
 import jwt, { SignOptions } from "jsonwebtoken";
 import { serverConfig } from "../config";
 import { Types } from "mongoose";
@@ -51,6 +51,43 @@ export class UserService {
             };
         } catch (error) {
             logger.error("Signup failed", { error, email: userData.email });
+            throw error;
+        }
+    }
+
+    /**
+     * Handles user signin process
+     * Validates credentials and returns user data with JWT token
+     * 
+     * @param userData - User signin data (email, password)
+     * @returns User data (without password) and JWT token
+     * @throws BadRequestError if user not found
+     * @throws UnauthorizedError if password is invalid
+     * @throws InternalServerError if token generation fails
+     */
+    async signIn(userData: SignInRequestDto): Promise<SignInResponseDto> {
+        logger.info(`Signin attempt for email: ${userData.email}`);
+
+        try {
+            // Validate credentials
+            const user = await this.userRepository.signIn(userData.email, userData.password);
+
+            if (!user) {
+                throw new Error("User authentication failed");
+            }
+
+            // Generate JWT token
+            const token = this.generateToken(user);
+
+            logger.info(`Signin successful for user ID: ${user._id}`);
+
+            // Return user data (without password) and token
+            return {
+                user: transformUserToResponse(user),
+                token,
+            };
+        } catch (error) {
+            logger.error("Signin failed", { error, email: userData.email });
             throw error;
         }
     }

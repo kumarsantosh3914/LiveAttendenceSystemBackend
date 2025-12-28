@@ -13,10 +13,27 @@ export interface SignUpRequestDto {
 }
 
 /**
+ * DTO for user signin request
+ */
+export interface SignInRequestDto {
+    email: string;
+    password: string;
+}
+
+/**
  * DTO for user signup response
  * Excludes sensitive information like password
  */
 export interface SignUpResponseDto {
+    user: UserResponseDto;
+    token: string;
+}
+
+/**
+ * DTO for user signin response
+ * Same structure as signup response
+ */
+export interface SignInResponseDto {
     user: UserResponseDto;
     token: string;
 }
