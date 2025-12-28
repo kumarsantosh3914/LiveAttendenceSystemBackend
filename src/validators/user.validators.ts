@@ -32,7 +32,26 @@ export const signUpSchema = z.object({
 });
 
 /**
+ * Zod schema for validating user signin request
+ */
+export const signInSchema = z.object({
+    email: z
+        .string()
+        .email("Invalid email format")
+        .toLowerCase()
+        .trim(),
+    password: z
+        .string()
+        .min(1, "Password is required"),
+});
+
+/**
  * Type inferred from signUpSchema for TypeScript type safety
  */
 export type SignUpValidationSchema = z.infer<typeof signUpSchema>;
+
+/**
+ * Type inferred from signInSchema for TypeScript type safety
+ */
+export type SignInValidationSchema = z.infer<typeof signInSchema>;
 

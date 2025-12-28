@@ -7,25 +7,35 @@ import { StatusCodes } from "http-status-codes";
 const userService = new UserService(new UserRepository());
 
 export async function signupHandler(req: Request, res: Response, next: NextFunction) {
-    logger.info("Signup request received");
+    try {
+        logger.info("Signup request received");
 
-    const response = await userService.signUp(req.body);
+        const { user, token } = await userService.signUp(req.body);
 
-    res.status(StatusCodes.CREATED).json({
-        success: true,
-        message: "User created successfully",
-        data: response,
-    });
+        res.status(StatusCodes.CREATED).json({
+            success: true,
+            message: "User created successfully",
+            user,
+            token,
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 export async function signinHandler(req: Request, res: Response, next: NextFunction) {
-    logger.info("Signin request received");
+    try {
+        logger.info("Signin request received");
 
-    const response = await userService.signIn(req.body);
+        const { user, token } = await userService.signIn(req.body);
 
-    res.status(StatusCodes.OK).json({
-        success: true,
-        message: "User signed in successfully",
-        data: response,
-    });
+        res.status(StatusCodes.OK).json({
+            success: true,
+            message: "User signed in successfully",
+            user,
+            token,
+        });
+    } catch (error) {
+        next(error);
+    }
 }
