@@ -14,6 +14,10 @@ export class ClassRepository extends BaseRepository<IClass> {
         return await Class.find({ teacherId }).populate('teacherId', 'name email').populate('studentIds', 'name email');
     }
 
+    async findByStudentId(studentId: string | Types.ObjectId): Promise<IClass[]> {
+        return await Class.find({ studentIds: studentId }).populate('teacherId', 'name email');
+    }
+
     async addStudent(classId: string | Types.ObjectId, studentId: string | Types.ObjectId): Promise<IClass | null> {
         if(!Types.ObjectId.isValid(classId) || !Types.ObjectId.isValid(studentId)) {
             throw new BadRequestError("Invalid ID format");

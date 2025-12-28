@@ -56,6 +56,11 @@ export class ClassService {
         return await this.classRepository.findByTeacherId(teacherId);
     }
 
+    async findByStudentId(studentId: string | Types.ObjectId): Promise<IClass[]> {
+        logger.debug(`Fetching classes for student ID: ${studentId}`);
+        return await this.classRepository.findByStudentId(studentId);
+    }
+
     async addStudent(classId: string | Types.ObjectId, studentId: string | Types.ObjectId): Promise<IClass | null> {
         return await this.classRepository.addStudent(classId, studentId);
     }
