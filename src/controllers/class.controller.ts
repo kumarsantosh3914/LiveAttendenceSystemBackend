@@ -128,7 +128,7 @@ export async function getClassesByTeacherHandler(req: Request, res: Response, ne
         const { teacherId } = req.params;
         logger.info(`Get classes by teacher request received: ${teacherId}`);
 
-        const classes = await classService.findByTeacherI(teacherId);
+        const classes = await classService.findByTeacherId(teacherId);
 
         res.status(StatusCodes.OK).json({
             success: true,

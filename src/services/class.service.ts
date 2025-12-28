@@ -52,7 +52,7 @@ export class ClassService {
         return deleteClass;
     }
 
-    async findByTeacherI(teacherId: string | Types.ObjectId): Promise<IClass[]> {
+    async findByTeacherId(teacherId: string | Types.ObjectId): Promise<IClass[]> {
         return await this.classRepository.findByTeacherId(teacherId);
     }
 

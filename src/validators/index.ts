@@ -31,15 +31,17 @@ export const validateRequestBody = (schema: AnyZodObject): RequestHandler => {
  * @param Schema - zod schema to validate the request query params
  * @returns - Middleware function to validate the request query params
  */
-export const validteQueryParams = (Schema: AnyZodObject) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+export const validteQueryParams = (Schema: AnyZodObject): RequestHandler => {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info('Validating query params...');
             await Schema.parseAsync(req.query);
-            console.log('Query params are valid');
+            logger.info('Query params are valid');
             next();
         } catch (error) {
             // If the validation fails, send a 400 response with the error message
-            return res.status(400).json({
+            logger.error('Query params are invalid');
+            res.status(400).json({
                 message: "Invalid query params",
                 success: false,
                 error: error

@@ -61,3 +61,29 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         next(error);
     }
 }
+
+/**
+ * Role-based authorization middleware
+ * Use after authenticate middleware to check user roles
+ * 
+ * @param allowedRoles - Array of allowed roles
+ * @returns Middleware function
+ */
+export const authorize = (allowedRoles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction): void => {
+        if (!req.user) {
+            throw new UnauthorizedError("User not authenticated");
+        }
+
+        if (!allowedRoles.includes(req.user.role)) {
+            logger.warn("Access denied - insufficient permissions", {
+                userId: req.user.id,
+                userRole: req.user.role,
+                requiredRoles: allowedRoles,
+            });
+            throw new UnauthorizedError("Insufficient permissions");
+        }
+
+        next();
+    };
+}
